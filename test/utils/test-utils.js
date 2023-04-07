@@ -15,32 +15,38 @@ let runSQLQuery;
 try {
   const sqlite3 = require('better-sqlite3');
   runSQL = (statement, dbTestFile) => {
+    // Use for executing create, update and delete SQL commands
     return new Promise((resolve, reject) => {
-      const db = sqlite3(dbTestFile);
-      const stmt = db.prepare(statement);
-      try {
-        const result = stmt.run();
-        db.close();
-        resolve(result);
-      } catch(err) {
-        db.close();
-        reject(err);
-      }
+      setTimeout(() => {
+        const db = sqlite3(dbTestFile);
+        const stmt = db.prepare(statement);
+        try {
+          const result = stmt.run();
+          db.close();
+          resolve(result);
+        } catch(err) {
+          db.close();
+          reject(err);
+        }
+      }, 100);
     });
   };
 
   runSQLQuery = (statement, dbTestFile) => {
+    // Use for executing read (SELECT) SQL commands only
     return new Promise((resolve, reject) => {
-      const db = sqlite3(dbTestFile);
-      const stmt = db.prepare(statement);
-      try {
-        const result = stmt.all();
-        db.close();
-        resolve(result);
-      } catch(err) {
-        db.close();
-        reject(err);
-      }
+      setTimeout(() => {
+        const db = sqlite3(dbTestFile);
+        const stmt = db.prepare(statement);
+        try {
+          const result = stmt.all();
+          db.close();
+          resolve(result);
+        } catch(err) {
+          db.close();
+          reject(err);
+        }
+      }, 100);
     });
   };
 } catch {
@@ -48,24 +54,26 @@ try {
   runSQL = (statement, dbTestFile) => {
     // Use for executing create, update and delete SQL commands
     return new Promise((resolve, reject) => {
-      const path = require('path');
-      const dbPath = path.resolve(__dirname, "../../", )
-      const db = new sqlite3.Database(dbTestFile, sqlite3.OPEN_READWRITE);
-      db.run(statement, function(err) {
-        db.close();
-        err ? reject(err): resolve();
-      });
+      setTimeout(() => {
+        const db = new sqlite3.Database(dbTestFile, sqlite3.OPEN_READWRITE);
+        db.run(statement, function(err) {
+          db.close();
+          err ? reject(err): resolve();
+        });
+      }, 100);
     });
   };
 
   runSQLQuery = (statement, dbTestFile) => {
     // Use for executing read (SELECT) SQL commands only
     return new Promise((resolve, reject) => {
-      const db = new sqlite3.Database(dbTestFile, sqlite3.OPEN_READWRITE);
-      db.all(statement, function(err, rows) {
-        db.close();
-        err ? reject(err): resolve(rows);
-      });
+      setTimeout(() => {
+        const db = new sqlite3.Database(dbTestFile, sqlite3.OPEN_READWRITE);
+        db.all(statement, function(err, rows) {
+          db.close();
+          err ? reject(err): resolve(rows);
+        });
+      }, 100);
     });
   };
 }
@@ -125,6 +133,13 @@ module.exports.undoAllSeeds = async function (dbTestFile) {
   }
 )};
 
+module.exports.getAllSeederFiles = () => {
+  const fs = require('fs');
+  const path = require('path');
+  const seederFiles = fs.readdirSync(path.resolve(process.cwd(), 'server', 'db', 'seeders'));
+  return seederFiles.filter(file => file.endsWith('.js')).sort();
+};
+
 // all files in the /test/original-files folder will replace those files in the
   // equivalent path in the server/ directory
 const replaceFilesScript = `
@@ -137,7 +152,7 @@ module.exports.resetFiles = async function () {
   return new Promise((resolve, reject) => {
     const replaceFilesProcess = exec(
       replaceFilesScript,
-      { env },
+      { env: process.env },
       err => (err ? reject(err): resolve())
     );
     replaceFilesProcess.stdout.on('data', function(data) {
@@ -162,6 +177,7 @@ module.exports.setupBefore = async (filename) => {
   const server = require(path.resolve(process.cwd(), 'server', 'app'));
   const models = require(path.resolve(process.cwd(), 'server', 'db', 'models'));
   await resetDB(DB_TEST_FILE);
+  // await seedAllDB(DB_TEST_FILE);
   return { server, models, DB_TEST_FILE, SERVER_DB_TEST_FILE };
 };
 
@@ -173,10 +189,3 @@ module.exports.setupChai = () => {
   chai.use(chaiHttp);
   return chai;
 };
-
-module.exports.getAllSeederFiles = () => {
-  const fs = require('fs');
-  const path = require('path');
-  const seederFiles = fs.readdirSync(path.resolve(process.cwd(), 'server', 'db', 'seeders'));
-  return seederFiles.filter(file => file.endsWith('.js')).sort();
-}

@@ -102,3 +102,13 @@ outside the `server` folder).
 ## Congratulations!
 
 You are now able to generate, run, and undo seeder files with **Sequelize**.
+
+## Submission
+
+Submit your work. Make sure to delete the `node_modules` folders in
+__BOTH root and server directories__!!
+
+1. Delete the `node_modules` folder in the root directory
+2. Delete the `node_modules` folder in the __server__ directory
+3. Zip up the project folder
+4. Submit the zip file
