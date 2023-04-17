@@ -64,7 +64,7 @@ Check that the database contains the seed data using `sqlite3` in the terminal.
 Run a simple `SELECT` query to see the contents of the `Colors` table.
 
 You can test if you have implemented the `up` and `down` functions correctly by
-running `npm test` in the root directory (right outside the `server` folder).
+running `npm test` in the __server__ directory.
 
 ## Step 5: Undo the seeder and check the database
 
@@ -96,8 +96,7 @@ Use `sequelize-cli` to undo the most recent seeder file.
 Check that the database now only contains the data from the first seeder.
 
 You can test if you have implemented the `up` and `down` functions in the second
-seeder correctly by running `npm test test/bonus` in the root directory (right
-outside the `server` folder).
+seeder correctly by running `npm test test/bonus` in the __server__ directory.
 
 ## Congratulations!
 
@@ -105,10 +104,8 @@ You are now able to generate, run, and undo seeder files with **Sequelize**.
 
 ## Submission
 
-Submit your work. Make sure to delete the `node_modules` folders in
-__BOTH root and server directories__!!
+Submit your work.
 
-1. Delete the `node_modules` folder in the root directory
-2. Delete the `node_modules` folder in the __server__ directory
-3. Zip up the project folder
-4. Submit the zip file
+1. Delete the `node_modules` folder in the __server__ directory
+2. Zip up the project folder
+3. Submit the zip file
