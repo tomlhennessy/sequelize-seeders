@@ -1,6 +1,11 @@
+require('dotenv').config();
+const path = require('path');
+
+console.log('Resolved DB Path:', path.resolve(__dirname, '..', '..', process.env.DB_FILE));
+
 module.exports = {
   development: {
-    storage: process.env.DB_FILE,
+    storage: path.resolve(__dirname, '..', '..', process.env.DB_FILE),
     dialect: "sqlite",
     seederStorage: "sequelize",
     benchmark: true,
@@ -9,7 +14,7 @@ module.exports = {
     // logging: false
   },
   test: {
-    storage: process.env.DB_TEST_FILE,
+    storage: path.resolve(__dirname, '..', '..', process.env.DB_TEST_FILE),
     dialect: "sqlite",
     seederStorage: "sequelize",
     // logging: false
